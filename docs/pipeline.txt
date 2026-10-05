@@ -1,0 +1,19 @@
+Image Loading
+      ↓
+Grayscale Conversion
+      ↓
+Resize
+      ↓
+Denoising
+      ↓
+Contrast Enhancement
+      ↓
+Segmentation
+      ↓
+Connected Components / ROI
+      ↓
+Feature Extraction
+      ↓
+Classification
+      ↓
+Output / Overlay

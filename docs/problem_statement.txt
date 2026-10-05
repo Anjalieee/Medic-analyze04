@@ -1,0 +1,7 @@
+Given a collection of chest X-ray images, the system preprocesses the images,
+segments regions of interest, extracts features and classifies them as NORMAL
+or ABNORMAL (pneumonia). The sequential image-processing pipeline is then
+parallelized using OpenMP and evaluated using execution time, speedup,
+efficiency and scalability.
+
+This system is an assistive image-analysis tool and is not a medical diagnostic tool.
