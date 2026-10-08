@@ -136,12 +136,16 @@ int main(int argc, char** argv) {
     long failed = 0;
     for (const Result& r : res) {
         if (!r.ok) { ++failed; continue; }
-        cm.add(r.label, r.pred);
+        if (r.label == 0 || r.label == 1) cm.add(r.label, r.pred);   // label -1 = unknown, not scored
         for (int s = 0; s < NSTAGES; ++s) stage_sum[s] += r.t_ms[s];
     }
     struct rusage ru;
     getrusage(RUSAGE_SELF, &ru);
-    const double peak_mb = ru.ru_maxrss / 1024.0;     // Linux: KB
+#ifdef __APPLE__
+    const double peak_mb = ru.ru_maxrss / (1024.0 * 1024.0);   // macOS reports BYTES
+#else
+    const double peak_mb = ru.ru_maxrss / 1024.0;              // Linux reports KILOBYTES
+#endif
 
     // ---- per-image CSV ----
     if (!out_csv.empty()) {
@@ -197,7 +201,7 @@ int main(int argc, char** argv) {
     std::printf("stage time summed over images (CPU-ms%s):\n", par_images ? ", summed across threads" : "");
     for (int s = 0; s < NSTAGES; ++s)
         std::printf("  %-9s %10.1f ms  %5.1f%%\n", STAGE_NAMES[s], stage_sum[s], tot > 0 ? 100.0 * stage_sum[s] / tot : 0.0);
-    std::printf("classification (labels from CSV; default weights are untrained placeholders):\n");
+    std::printf("classification (%s):\n", model_path.empty() ? "default weights are untrained placeholders" : "trained model");
     std::printf("  TP=%ld FP=%ld TN=%ld FN=%ld  acc=%.3f prec=%.3f rec=%.3f f1=%.3f\n",
                 cm.tp, cm.fp, cm.tn, cm.fn, cm.accuracy(), cm.precision(), cm.recall(), cm.f1());
     return failed ? 2 : 0;

@@ -43,16 +43,25 @@ def run(mode, threads, ds_dir, size, summary, repeats, warmup=True):
 def fresh(path, append):
     if path.exists() and not append: path.unlink()
 
+def sh(cmd):
+    try: return subprocess.run(cmd, capture_output=True, text=True).stdout.strip()
+    except Exception: return ""
+
 def sysinfo(maxt):
-    cpu = platform.processor()
-    try:
-        for l in open("/proc/cpuinfo"):
-            if l.startswith("model name"): cpu = l.split(":", 1)[1].strip(); break
-    except OSError: pass
-    comp = subprocess.run(["g++", "--version"], capture_output=True, text=True).stdout.splitlines()[0]
-    mem = ""
-    try: mem = [l for l in open("/proc/meminfo") if l.startswith("MemTotal")][0].strip()
-    except Exception: pass
+    cpu, mem = platform.processor(), ""
+    if platform.system() == "Darwin":                                   # macOS
+        cpu = sh(["sysctl", "-n", "machdep.cpu.brand_string"]) or cpu
+        b = sh(["sysctl", "-n", "hw.memsize"])
+        mem = f"memory: {int(b) / 2**30:.0f} GB" if b else ""
+        perf = sh(["sysctl", "-n", "hw.perflevel0.logicalcpu"]); eff = sh(["sysctl", "-n", "hw.perflevel1.logicalcpu"])
+        if perf: mem += f"\nperformance cores: {perf}   efficiency cores: {eff or 'n/a'}"
+    else:
+        try:
+            for l in open("/proc/cpuinfo"):
+                if l.startswith("model name"): cpu = l.split(":", 1)[1].strip(); break
+            mem = [l for l in open("/proc/meminfo") if l.startswith("MemTotal")][0].strip()
+        except Exception: pass
+    comp = (sh(["g++", "--version"]).splitlines() or ["unknown"])[0]
     (RES / "system_info.txt").write_text(
         f"date: {datetime.datetime.now():%Y-%m-%d %H:%M}\ncpu: {cpu}\nlogical cores: {os.cpu_count()}\n"
         f"max threads used: {maxt}\n{mem}\ncompiler: {comp}\nflags: -O2 -ffp-contract=off -fopenmp\n"
@@ -69,11 +78,13 @@ def main():
     ap.add_argument("--only", choices=["E1", "E2", "E3"])
     ap.add_argument("--append", action="store_true")
     ap.add_argument("--quick", action="store_true")
+    ap.add_argument("--sysinfo-only", action="store_true", help="only (re)write system_info.txt")
     a = ap.parse_args()
     if a.quick: a.repeats = 2
     data = Path(a.data); RES.mkdir(parents=True, exist_ok=True)
     T = thread_list(a.max_threads); mx = a.max_threads
     sysinfo(mx)
+    if a.sysinfo_only: print('wrote', RES / 'system_info.txt'); return
     print(f"threads tested: {T}   repeats: {a.repeats}")
 
     if a.only in (None, "E1"):

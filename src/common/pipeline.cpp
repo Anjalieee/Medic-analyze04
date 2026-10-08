@@ -51,7 +51,9 @@ Result process_image(const std::string& path, const std::string& name, int label
         r.h_mask     = fnv1a(mk.d.data(), mk.size());
     }
     if (!save_dir.empty()) {
-        const std::string base = save_dir + "/" + name;
+        std::string safe = name;
+        std::replace(safe.begin(), safe.end(), '/', '_');                 // sub-folder names -> flat file names
+        const std::string base = save_dir + "/" + safe;
         save_gray_png(base + "_enh.png", eq);
         save_gray_png(base + "_mask.png", mk);
         save_overlay_png(base + "_overlay.png", eq, r.rois);
