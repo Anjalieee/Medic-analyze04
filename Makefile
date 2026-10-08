@@ -1,4 +1,4 @@
-CXX      ?= g++
+CXX      ?= clang++
 CXXFLAGS ?= -O2 -std=c++17 -Wall -Wextra -ffp-contract=off -Isrc -isystem third_party
 # -ffp-contract=off : forbid fused multiply-add so floating point results match across builds
 
@@ -14,7 +14,7 @@ bin/mia_seq: src/main.cpp $(COMMON) $(SEQ)
 
 bin/mia_omp: src/main.cpp $(COMMON) $(SEQ) $(OMP)
 	@mkdir -p bin
-	$(CXX) $(CXXFLAGS) -fopenmp -DUSE_OPENMP -o $@ $^
+	$(CXX) $(CXXFLAGS) -Xclang -fopenmp -DUSE_OPENMP -I/opt/homebrew/opt/libomp/include -L/opt/homebrew/opt/libomp/lib -lomp -o $@ $^
 
 deps:
 	mkdir -p third_party/stb

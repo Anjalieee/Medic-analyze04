@@ -1,0 +1,8 @@
+date: 2026-10-07 23:33
+cpu: arm
+logical cores: 10
+max threads used: 10
+
+compiler: Apple clang version 21.0.0 (clang-2100.3.34.2)
+flags: -O2 -ffp-contract=off -fopenmp
+os: macOS-27.0-arm64-arm-64bit

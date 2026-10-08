@@ -1,0 +1,40 @@
+{
+  "criterion": "youden",
+  "weights": {
+    "bright_frac": 33.71022476664918,
+    "largest_roi_frac": -25.30614569045044,
+    "mean": -11.887994455502856,
+    "std": -91.85750849711114,
+    "edge_density": -399.95071253602964,
+    "roi_count": 6.368044418638496
+  },
+  "bias": 35.1647512261405,
+  "val": {
+    "tp": 1020,
+    "fp": 77,
+    "tn": 397,
+    "fn": 261,
+    "accuracy": 0.8074074074074075,
+    "precision": 0.9298085688240656,
+    "recall": 0.7962529274004684,
+    "specificity": 0.8375527426160337,
+    "f1": 0.8578637510513036,
+    "balanced_accuracy": 0.816902835008251,
+    "python_vs_cpp_agreement": 1.0,
+    "baseline_all_abnormal_accuracy": 0.7299145299145299
+  },
+  "test": {
+    "tp": 1031,
+    "fp": 74,
+    "tn": 402,
+    "fn": 252,
+    "accuracy": 0.8146674246731097,
+    "precision": 0.9330316742081448,
+    "recall": 0.8035853468433359,
+    "specificity": 0.8445378151260504,
+    "f1": 0.8634840871021775,
+    "balanced_accuracy": 0.8240615809846932,
+    "python_vs_cpp_agreement": 1.0,
+    "baseline_all_abnormal_accuracy": 0.7293916998294485
+  }
+}
