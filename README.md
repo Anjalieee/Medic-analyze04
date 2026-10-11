@@ -8,6 +8,8 @@ Medic-analyze04 is a medical image analysis project focused on pneumonia dataset
 
 The main objective is to process pneumonia-related medical images, apply preprocessing operations, and compare the runtime and efficiency of sequential versus parallel implementations. This project is particularly relevant for understanding how computational optimization impacts medical image analysis workloads, which are often resource-intensive.
 
+The project demonstrates how parallel computing can accelerate medical image processing while maintaining consistent processing workflows.
+
 ## Motivation
 
 Medical image analysis often involves large datasets and computationally expensive operations such as filtering, enhancement, and transformations. In clinical and research settings, efficient processing is essential for timely diagnosis and analysis. This project aims to study the performance differences between sequential execution and parallel execution when working with pneumonia image data.
@@ -76,3 +78,4 @@ cd Medic-analyze04
 make deps 
 make
 make test
+```
